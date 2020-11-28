@@ -4,11 +4,13 @@ import com.michaljk.micra.models.Balance;
 import com.michaljk.micra.models.Trip;
 import com.michaljk.micra.models.TripUser;
 import com.michaljk.micra.models.User;
+import com.michaljk.micra.repositories.BalanceRepository;
 import com.michaljk.micra.repositories.TripRepository;
+import com.michaljk.micra.repositories.TripUserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -16,28 +18,43 @@ import java.util.List;
 public class TripService {
 
     private final TripRepository tripRepository;
+    private final BalanceRepository balanceRepository;
+    private final TripUserRepository tripUserRepository;
     private final UserService userService;
     private final CarService carService;
 
     public void addTrip(List<TripUser> tripUsers, boolean updateBalance) {
-        LocalDate today = LocalDate.now();
+        Date today = new Date();
         String month = String.valueOf(today.getMonth());
         Long year = (long) today.getYear();
-        Trip trip = new Trip(today, tripUsers);
+        Trip trip = new Trip();
+        trip.setTripUsers(tripUsers);
+        trip.setTripDate(today);
         long tripKilometers = 0L;
         for(TripUser tripUser : tripUsers) {
-            User user = userService.getUserByName(tripUser.getName());
+            User user = tripUser.getUser();
             long userKilometers = tripUser.getKilometers();
             tripKilometers += userKilometers;
+            Balance balance = userService.getOrCreateBalanceByMonthAndYear(user, month, year);
+            balance.setUser(user);
             if (updateBalance) {
-                Balance balance = userService.getOrCreateBalanceByMonthAndYear(user, month, year);
                 balance.setKilometers(balance.getKilometers() + userKilometers);
-                userService.updateUserBalance(user, balance);
+            } else {
+                balance.setFreeKilometers(balance.getFreeKilometers() + userKilometers);
             }
+            userService.updateUserBalance(user, balance);
+            balanceRepository.save(balance);
         }
+        trip.setTotalKilometers(tripKilometers);
+        trip.setUpdateBalance(updateBalance);
         carService.updateCarMileage(tripKilometers);
-        tripRepository.save(trip);
+        saveTrip(trip, tripUsers);
     }
 
+    private void saveTrip(Trip trip, List<TripUser> tripUsers){
+        tripRepository.save(trip);
+        tripUsers.forEach(tripUser -> tripUser.setTrip(trip));
+        tripUserRepository.saveAll(tripUsers);
+    }
 
 }

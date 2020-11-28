@@ -1,8 +1,11 @@
 package com.michaljk.micra.services;
 
 import com.michaljk.micra.models.Balance;
+import com.michaljk.micra.models.Trip;
+import com.michaljk.micra.models.TripUser;
 import com.michaljk.micra.models.User;
 import com.michaljk.micra.repositories.UserRepository;
+import com.michaljk.micra.services.api.trip.TripUserRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,18 +24,21 @@ public class UserService {
     }
 
     public void addUser(String userName){
-        User user = User.builder()
-                .name(userName)
-                .balances(List.of())
-                .build();
+        User user = new User();
+        user.setName(userName);
         userRepository.save(user);
     }
 
     public Balance getOrCreateBalanceByMonthAndYear(User user, String month, Long year){
-        return user.getBalances().stream()
+        Balance balance = user.getBalances().stream()
                 .filter(b -> b.periodEqual(month, year))
-                .findFirst().orElse(new Balance(month, year));
-
+                .findFirst().orElse(null);
+        if (balance == null) {
+            balance = new Balance();
+            balance.setMonth(month);
+            balance.setYear(year);
+        }
+        return balance;
     }
 
     public void updateUserBalance(User user, Balance balance) {
@@ -48,6 +54,23 @@ public class UserService {
            user.getBalances().add(balance);
         }
         userRepository.save(user);
+    }
+
+    public List<TripUser> mapToTripUsersByName(List<TripUserRequest> requestUsers) {
+        List<TripUser> users = new ArrayList<>();
+        for (TripUserRequest tripUserRequest : requestUsers){
+            users.add(getMappedTripUser(tripUserRequest));
+        }
+        return users;
+    }
+
+    private TripUser getMappedTripUser(TripUserRequest tripUserRequest){
+        User user = getUserByName(tripUserRequest.getName());
+        TripUser tripUser = new TripUser();
+        tripUser.setUser(user);
+        tripUser.setUserId(user.getId());
+        tripUser.setKilometers(tripUserRequest.getKilometers());
+        return tripUser;
     }
 }
 

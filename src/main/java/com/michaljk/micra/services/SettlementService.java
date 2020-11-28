@@ -51,9 +51,6 @@ public class SettlementService {
         return MathUtils.roundDouble(parkingCharge);
     }
 
-    public static void main(String[] args){
-
-    }
 
 
 }

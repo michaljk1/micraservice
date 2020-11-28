@@ -1,15 +1,9 @@
 package com.michaljk.micra.services;
 
 import com.michaljk.micra.models.Car;
-import com.michaljk.micra.models.Trip;
-import com.michaljk.micra.models.TripUser;
 import com.michaljk.micra.repositories.CarRepository;
-import com.michaljk.micra.repositories.TripRepository;
-import com.michaljk.micra.services.api.car.NewCarRequest;
+import com.michaljk.micra.services.api.car.WSCarRequest;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.List;
 
 @Service
 public class CarService {
@@ -20,20 +14,24 @@ public class CarService {
         this.carRepository = carRepository;
     }
 
-    public void addCar(NewCarRequest newCar) throws Exception {
+    public void addCar(WSCarRequest newCar) throws Exception {
         if(carRepository.findAll().size() > 0 ){
             throw new Exception("Car already exists");
         }
-        Car car = Car.builder()
-                .name(newCar.getName())
-                .mileage(newCar.getMileage())
-                .build();
+        Car car = new Car();
+        car.setId(2L);
+        car.setName(newCar.getName());
+        car.setMileage(newCar.getMileage());
         carRepository.save(car);
     }
 
     public void updateCarMileage(Long kilometers){
-        Car car = carRepository.findAll().stream().findFirst().orElseThrow();
+        Car car = getCar();
         car.setMileage(car.getMileage() + kilometers);
         carRepository.save(car);
+    }
+
+    public Car getCar(){
+        return carRepository.findAll().stream().findFirst().orElseThrow();
     }
 }

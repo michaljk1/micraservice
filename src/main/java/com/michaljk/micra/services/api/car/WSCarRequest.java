@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class NewCarRequest {
+public class WSCarRequest {
 
     String name;
     Long mileage;

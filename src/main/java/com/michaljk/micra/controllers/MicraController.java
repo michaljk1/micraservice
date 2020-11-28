@@ -3,10 +3,10 @@ package com.michaljk.micra.controllers;
 import com.michaljk.micra.models.TripUser;
 import com.michaljk.micra.services.CarService;
 import com.michaljk.micra.services.UserService;
-import com.michaljk.micra.services.api.car.NewCarRequest;
+import com.michaljk.micra.services.api.car.WSCarRequest;
+import com.michaljk.micra.services.api.car.WSCarResponse;
 import com.michaljk.micra.services.api.settlement.SettlementRequest;
 import com.michaljk.micra.services.api.settlement.SettlementResponse;
-import com.michaljk.micra.services.api.settlement.SettlementUser;
 import com.michaljk.micra.services.api.trip.TripRequest;
 import com.michaljk.micra.services.api.trip.TripUserRequest;
 import com.michaljk.micra.services.SettlementService;
@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,15 +45,20 @@ public class MicraController {
 
     @PostMapping("trip")
     public ResponseEntity<String> addTrip(@RequestBody TripRequest tripRequest){
-        List<TripUser> tripUsers = tripRequest.getTripUsers().stream().map(TripUserRequest::toTripUser).collect(Collectors.toList());
+        List<TripUser> tripUsers = userService.mapToTripUsersByName(tripRequest.getTripUsers());
         tripService.addTrip(tripUsers, tripRequest.isUpdateBalance());
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 
     @PostMapping("car")
-    public ResponseEntity<String> addCar(@RequestBody NewCarRequest carRequest) throws Exception {
+    public ResponseEntity<String> addCar(@RequestBody WSCarRequest carRequest) throws Exception {
         carService.addCar(carRequest);
         return new ResponseEntity<>("OK", HttpStatus.OK);
+    }
+
+    @GetMapping("getCar")
+    public WSCarResponse getCar() throws Exception {
+        return new WSCarResponse(carService.getCar());
     }
 
     @PostMapping("user")

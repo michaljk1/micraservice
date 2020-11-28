@@ -1,8 +1,8 @@
 package com.michaljk.micra.repositories;
 
 import com.michaljk.micra.models.Trip;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface TripRepository extends MongoRepository<Trip, String> {
+public interface TripRepository extends JpaRepository<Trip, Long> {
 }
