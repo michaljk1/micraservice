@@ -3,7 +3,9 @@ package com.michaljk.micra.models;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.tomcat.jni.Address;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 
@@ -25,11 +28,9 @@ public class Balance {
     @Column(name = "BAL_ID")
     private Long id;
 
-    @Column(name = "BAL_MONTH")
-    private String month;
-
-    @Column(name = "BAL_YEAR")
-    private Long year;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "BAL_PER_ID", referencedColumnName = "PER_ID")
+    private Period period;
 
     @Column(name = "BAL_KMS")
     private Long kilometers = 0L;
@@ -41,11 +42,4 @@ public class Balance {
     @JoinColumn(name = "BAL_USR_ID")
     private User user;
 
-    public boolean periodEqual(Balance other) {
-        return periodEqual(other.getMonth(), other.getYear());
-    }
-
-    public boolean periodEqual(String month, Long year){
-        return  getMonth().equals(month) && getYear().equals(year);
-    }
 }

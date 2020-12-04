@@ -20,7 +20,7 @@ public class SettlementService {
 
     private final UserRepository userRepository;
 
-    public SettlementResponse getSettlement(String month, Long year){
+    public SettlementResponse getSettlement(String month, Integer year){
         List<SettlementUser> users = getUsersForSettlement(month, year);
         Long totalKilometers = users.stream()
                 .map(SettlementUser::getKilometers)
@@ -29,12 +29,12 @@ public class SettlementService {
         return new SettlementResponse(users, totalKilometers);
     }
 
-    private List<SettlementUser> getUsersForSettlement(String month, Long year){
+    private List<SettlementUser> getUsersForSettlement(String month, Integer year){
         List<User> users = userRepository.findAll();
         List<SettlementUser> settlementUsers = new ArrayList<>();
         for(User user : users){
             Optional<Balance> balance = user.getBalances().
-                    stream().filter(b -> b.periodEqual(month, year)).findFirst();
+                    stream().filter(b -> b.getPeriod().periodEqual(month, year)).findFirst();
             balance.ifPresent(value -> settlementUsers.add(new SettlementUser(user.getName(), value.getKilometers())));
         }
         return settlementUsers;
@@ -44,6 +44,7 @@ public class SettlementService {
     private void calculateCharges(SettlementUser user, Long totalKilometers){
         user.setParkingCharge(calculateParkingCharge(user.getKilometers(), totalKilometers));
         user.setGasCharge(SettlementUtils.convertKilometersToZl(user.getKilometers()));
+        user.setTotalCharge(MathUtils.roundDouble(user.getGasCharge()+user.getParkingCharge()));
     }
 
     private Double calculateParkingCharge(Long userKilometers, Long totalKilometers) {

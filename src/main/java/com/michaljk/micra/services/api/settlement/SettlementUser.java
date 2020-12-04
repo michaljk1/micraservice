@@ -1,5 +1,6 @@
 package com.michaljk.micra.services.api.settlement;
 
+import com.michaljk.micra.services.utils.MathUtils;
 import com.michaljk.micra.services.utils.SettlementUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,8 +21,5 @@ public class SettlementUser {
     public SettlementUser(String name, Long kilometers){
         this.name = name;
         this.kilometers = kilometers;
-    }
-    public Double getTotalCharge() {
-        return getGasCharge()+getParkingCharge();
     }
 }

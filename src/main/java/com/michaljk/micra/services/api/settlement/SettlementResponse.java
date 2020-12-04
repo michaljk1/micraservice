@@ -14,13 +14,15 @@ public class SettlementResponse {
         this.users = users;
         this.totalKilometers = totalKilometers;
         this.gasCharge = SettlementUtils.convertKilometersToZl(totalKilometers);
-        this.totalCharge = gasCharge + SettlementUtils.PARKING_CHARGE;
-
+        this.totalCharge = gasCharge + parkingCharge;
     }
 
+    private Double litersOfGasPer100Km = SettlementUtils.LITERS_OF_GAS_PER_100KM;
+    private Double priceOfOneLiterOfGas = SettlementUtils.PRICE_OF_ONE_LITER_OF_GAS;
+    private Double parkingCharge = SettlementUtils.PARKING_CHARGE;
+    private Long totalKilometers;
     private Double gasCharge;
     private Double totalCharge;
-    private Long totalKilometers;
     private List<SettlementUser> users;
 
 }

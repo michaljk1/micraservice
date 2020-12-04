@@ -7,6 +7,7 @@ import com.michaljk.micra.models.User;
 import com.michaljk.micra.repositories.BalanceRepository;
 import com.michaljk.micra.repositories.TripRepository;
 import com.michaljk.micra.repositories.TripUserRepository;
+import com.michaljk.micra.services.utils.DateUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,11 +23,12 @@ public class TripService {
     private final TripUserRepository tripUserRepository;
     private final UserService userService;
     private final CarService carService;
+    private final BalanceService balanceService;
 
     public void addTrip(List<TripUser> tripUsers, boolean updateBalance) {
         Date today = new Date();
-        String month = String.valueOf(today.getMonth());
-        Long year = (long) today.getYear();
+        String month = DateUtils.getCurrentMonth();
+        Integer year = DateUtils.getCurrentYear();
         Trip trip = new Trip();
         trip.setTripUsers(tripUsers);
         trip.setTripDate(today);
@@ -35,14 +37,8 @@ public class TripService {
             User user = tripUser.getUser();
             long userKilometers = tripUser.getKilometers();
             tripKilometers += userKilometers;
-            Balance balance = userService.getOrCreateBalanceByMonthAndYear(user, month, year);
-            balance.setUser(user);
-            if (updateBalance) {
-                balance.setKilometers(balance.getKilometers() + userKilometers);
-            } else {
-                balance.setFreeKilometers(balance.getFreeKilometers() + userKilometers);
-            }
-            userService.updateUserBalance(user, balance);
+            Balance balance = balanceService.getOrCreateBalanceForUserByMonthAndYear(user, month, year);
+            balanceService.addKilometersToBalance(balance, userKilometers, updateBalance);
             balanceRepository.save(balance);
         }
         trip.setTotalKilometers(tripKilometers);

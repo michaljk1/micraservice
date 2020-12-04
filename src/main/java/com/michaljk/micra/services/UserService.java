@@ -29,32 +29,6 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public Balance getOrCreateBalanceByMonthAndYear(User user, String month, Long year){
-        Balance balance = user.getBalances().stream()
-                .filter(b -> b.periodEqual(month, year))
-                .findFirst().orElse(null);
-        if (balance == null) {
-            balance = new Balance();
-            balance.setMonth(month);
-            balance.setYear(year);
-        }
-        return balance;
-    }
-
-    public void updateUserBalance(User user, Balance balance) {
-        boolean balanceByPeriodFound = false;
-        for (Balance userBalance : user.getBalances()){
-            if (userBalance.periodEqual(balance)){
-                userBalance.setKilometers(balance.getKilometers());
-                balanceByPeriodFound = true;
-                break;
-            }
-        }
-        if (Boolean.FALSE.equals(balanceByPeriodFound)){
-           user.getBalances().add(balance);
-        }
-        userRepository.save(user);
-    }
 
     public List<TripUser> mapToTripUsersByName(List<TripUserRequest> requestUsers) {
         List<TripUser> users = new ArrayList<>();

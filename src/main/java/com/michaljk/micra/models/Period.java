@@ -1,9 +1,6 @@
 package com.michaljk.micra.models;
 
-import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,30 +11,30 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
+
 
 @Data
 @Entity
-@Table(name = "TRIP_USERS")
-public class TripUser {
+@Table(name = "PERIODS")
+public class Period {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "TUS_ID")
+    @Column(name = "PER_ID")
     private Long id;
 
-    @Column(name = "TUS_USR_ID")
-    private Long userId;
+    @Column(name = "PER_MONTH")
+    private String month;
 
-    @Column(name = "TUS_KMS")
-    private Long kilometers = 0L;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TUS_TRP_ID")
-    private Trip trip;
+    @Column(name = "PER_YEAR")
+    private Integer year;
 
 
-    @Transient
-    public User user;
+    public boolean periodEqual(Period other) {
+        return periodEqual(other.getMonth(), other.getYear());
+    }
 
+    public boolean periodEqual(String month, Integer year){
+        return  getMonth().equals(month) && getYear().equals(year);
+    }
 }

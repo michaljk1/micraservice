@@ -8,5 +8,5 @@ import lombok.Setter;
 @Getter
 public class SettlementRequest {
     private String month;
-    private Long year;
+    private Integer year;
 }
