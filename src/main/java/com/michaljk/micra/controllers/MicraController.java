@@ -1,6 +1,8 @@
 package com.michaljk.micra.controllers;
 
+import com.michaljk.micra.models.Period;
 import com.michaljk.micra.models.TripUser;
+import com.michaljk.micra.services.BalanceService;
 import com.michaljk.micra.services.CarService;
 import com.michaljk.micra.services.UserService;
 import com.michaljk.micra.services.api.car.WSCarRequest;
@@ -8,7 +10,6 @@ import com.michaljk.micra.services.api.car.WSCarResponse;
 import com.michaljk.micra.services.api.settlement.SettlementRequest;
 import com.michaljk.micra.services.api.settlement.SettlementResponse;
 import com.michaljk.micra.services.api.trip.TripRequest;
-import com.michaljk.micra.services.api.trip.TripUserRequest;
 import com.michaljk.micra.services.SettlementService;
 import com.michaljk.micra.services.TripService;
 import lombok.AllArgsConstructor;
@@ -25,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @EnableSwagger2
@@ -37,14 +37,16 @@ public class MicraController {
     private final SettlementService settlementService;
     private final CarService carService;
     private final UserService userService;
+    private final BalanceService balanceService;
 
     @PutMapping("settlement")
-    public SettlementResponse getSettlement(@RequestBody SettlementRequest settlementRequest){
-        return settlementService.getSettlement(settlementRequest.getMonth(), settlementRequest.getYear());
+    public SettlementResponse getSettlement(@RequestBody SettlementRequest settlementRequest) {
+        Period settlementPeriod = balanceService.getPeriod(settlementRequest.getMonth(), settlementRequest.getYear());
+        return settlementService.getSettlement(settlementPeriod);
     }
 
     @PostMapping("trip")
-    public ResponseEntity<String> addTrip(@RequestBody TripRequest tripRequest){
+    public ResponseEntity<String> addTrip(@RequestBody TripRequest tripRequest) {
         List<TripUser> tripUsers = userService.mapToTripUsersByName(tripRequest.getTripUsers());
         tripService.addTrip(tripUsers, tripRequest.isUpdateBalance());
         return new ResponseEntity<>("OK", HttpStatus.OK);
@@ -57,7 +59,7 @@ public class MicraController {
     }
 
     @GetMapping("getCar")
-    public WSCarResponse getCar() throws Exception {
+    public WSCarResponse getCar() {
         return new WSCarResponse(carService.getCar());
     }
 
@@ -66,5 +68,12 @@ public class MicraController {
         userService.addUser(name);
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }
+
+    @PostMapping("fuel")
+    public ResponseEntity<String> updateFuelUsage(@RequestBody Float fuelUsage) {
+        carService.updateFuelUsage(fuelUsage);
+        return new ResponseEntity<>("OK", HttpStatus.OK);
+    }
+
 
 }

@@ -21,33 +21,28 @@ public class TripService {
     private final TripRepository tripRepository;
     private final BalanceRepository balanceRepository;
     private final TripUserRepository tripUserRepository;
-    private final UserService userService;
     private final CarService carService;
     private final BalanceService balanceService;
 
     public void addTrip(List<TripUser> tripUsers, boolean updateBalance) {
-        Date today = new Date();
-        String month = DateUtils.getCurrentMonth();
-        Integer year = DateUtils.getCurrentYear();
         Trip trip = new Trip();
         trip.setTripUsers(tripUsers);
-        trip.setTripDate(today);
+        trip.setTripDate(new Date());
         long tripKilometers = 0L;
-        for(TripUser tripUser : tripUsers) {
-            User user = tripUser.getUser();
+        for (TripUser tripUser : tripUsers) {
+            Balance balance = balanceService.getUserBalance(tripUser.getUser(), DateUtils.getCurrentMonth(), DateUtils.getCurrentYear());
             long userKilometers = tripUser.getKilometers();
             tripKilometers += userKilometers;
-            Balance balance = balanceService.getOrCreateBalanceForUserByMonthAndYear(user, month, year);
             balanceService.addKilometersToBalance(balance, userKilometers, updateBalance);
             balanceRepository.save(balance);
         }
         trip.setTotalKilometers(tripKilometers);
         trip.setUpdateBalance(updateBalance);
-        carService.updateCarMileage(tripKilometers);
+        carService.updateCarOdometer(tripKilometers);
         saveTrip(trip, tripUsers);
     }
 
-    private void saveTrip(Trip trip, List<TripUser> tripUsers){
+    private void saveTrip(Trip trip, List<TripUser> tripUsers) {
         tripRepository.save(trip);
         tripUsers.forEach(tripUser -> tripUser.setTrip(trip));
         tripUserRepository.saveAll(tripUsers);

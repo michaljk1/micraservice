@@ -18,13 +18,19 @@ public class CarService {
         }
         Car car = new Car();
         car.setName(newCar.getName());
-        car.setMileage(newCar.getMileage());
+        car.setOdometer(newCar.getOdometer());
         carRepository.save(car);
     }
 
-    public void updateCarMileage(Long kilometers){
+    public void updateCarOdometer(Long kilometers){
         Car car = getCar();
-        car.setMileage(car.getMileage() + kilometers);
+        car.setOdometer(car.getOdometer() + kilometers);
+        carRepository.save(car);
+    }
+
+    public void updateFuelUsage(Float fuelUsage){
+        Car car = getCar();
+        car.setFuelUsage(fuelUsage);
         carRepository.save(car);
     }
 

@@ -8,6 +8,6 @@ import lombok.Setter;
 public class WSCarRequest {
 
     String name;
-    Long mileage;
+    Long odometer;
 
 }

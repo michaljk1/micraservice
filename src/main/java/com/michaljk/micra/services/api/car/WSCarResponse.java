@@ -9,11 +9,11 @@ import lombok.Setter;
 public class WSCarResponse {
 
     private String name;
-    private Long mileage;
+    private Long odometer;
 
     public WSCarResponse(Car car){
         this.name = car.getName();
-        this.mileage = car.getMileage();
+        this.odometer = car.getOdometer();
     }
 
 }

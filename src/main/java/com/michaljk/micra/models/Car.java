@@ -22,8 +22,12 @@ public class Car {
     @Column(name = "car_name")
     private String name;
 
-    @Column(name = "car_mileage")
-    private Long mileage;
+    @Column(name = "car_odometer")
+    private Long odometer;
+
+    @Column(name = "car_fuel_usage")
+    private Float fuelUsage;
+
 
 //    @OneToMany(fetch = FetchType.LAZY, mappedBy = "car")
 //    private List<CarEvent> events = new ArrayList<>();

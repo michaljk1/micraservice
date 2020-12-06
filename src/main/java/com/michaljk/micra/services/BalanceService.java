@@ -16,10 +16,10 @@ public class BalanceService {
 
     private final PeriodRepository periodRepository;
 
-    public Balance getOrCreateBalanceForUserByMonthAndYear(User user, String month, Integer year){
-        Period period = periodRepository.findByMonthAndYear(month, year).orElse(getCreatedPeriod(month, year));
+    public Balance getUserBalance(User user, String month, Integer year){
+        Period period = getPeriod(month, year);
         Balance balance = user.getBalances().stream()
-                .filter(b -> b.getPeriod().periodEqual(month, year))
+                .filter(b -> b.getPeriod().periodEqual(period))
                 .findFirst().orElse(null);
         if (balance == null) {
             balance = new Balance();
@@ -42,5 +42,9 @@ public class BalanceService {
         period.setMonth(month);
         period.setYear(year);
         return period;
+    }
+
+    public Period getPeriod(String month, Integer year) {
+        return periodRepository.findByMonthAndYear(month, year).orElse(getCreatedPeriod(month, year));
     }
 }

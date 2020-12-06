@@ -1,6 +1,7 @@
 package com.michaljk.micra.services;
 
 import com.michaljk.micra.models.Balance;
+import com.michaljk.micra.models.Period;
 import com.michaljk.micra.models.User;
 import com.michaljk.micra.repositories.UserRepository;
 import com.michaljk.micra.services.api.settlement.SettlementResponse;
@@ -20,8 +21,8 @@ public class SettlementService {
 
     private final UserRepository userRepository;
 
-    public SettlementResponse getSettlement(String month, Integer year){
-        List<SettlementUser> users = getUsersForSettlement(month, year);
+    public SettlementResponse getSettlement(Period period){
+        List<SettlementUser> users = getUsersForSettlement(period);
         Long totalKilometers = users.stream()
                 .map(SettlementUser::getKilometers)
                 .reduce(0L, Long::sum);
@@ -29,12 +30,12 @@ public class SettlementService {
         return new SettlementResponse(users, totalKilometers);
     }
 
-    private List<SettlementUser> getUsersForSettlement(String month, Integer year){
+    private List<SettlementUser> getUsersForSettlement(Period period){
         List<User> users = userRepository.findAll();
         List<SettlementUser> settlementUsers = new ArrayList<>();
         for(User user : users){
             Optional<Balance> balance = user.getBalances().
-                    stream().filter(b -> b.getPeriod().periodEqual(month, year)).findFirst();
+                    stream().filter(b -> b.getPeriod().periodEqual(period)).findFirst();
             balance.ifPresent(value -> settlementUsers.add(new SettlementUser(user.getName(), value.getKilometers())));
         }
         return settlementUsers;
