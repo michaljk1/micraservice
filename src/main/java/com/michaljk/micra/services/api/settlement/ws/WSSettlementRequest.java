@@ -1,4 +1,4 @@
-package com.michaljk.micra.services.api.settlement;
+package com.michaljk.micra.services.api.settlement.ws;
 
 
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class SettlementRequest {
+public class WSSettlementRequest {
     private String month;
     private Integer year;
 }

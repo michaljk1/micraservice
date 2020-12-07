@@ -29,6 +29,9 @@ public class User {
     @Column(name = "USR_NAME")
     private String name;
 
+    @Column(name = "USR_SPLITWISE_ID")
+    private Integer splitwiseId;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Balance> balances = new ArrayList<>();
 }

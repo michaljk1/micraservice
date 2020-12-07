@@ -7,8 +7,8 @@ import com.michaljk.micra.services.CarService;
 import com.michaljk.micra.services.UserService;
 import com.michaljk.micra.services.api.car.WSCarRequest;
 import com.michaljk.micra.services.api.car.WSCarResponse;
-import com.michaljk.micra.services.api.settlement.SettlementRequest;
-import com.michaljk.micra.services.api.settlement.SettlementResponse;
+import com.michaljk.micra.services.api.settlement.ws.WSSettlementRequest;
+import com.michaljk.micra.services.api.settlement.ws.WSSettlementResponse;
 import com.michaljk.micra.services.api.trip.TripRequest;
 import com.michaljk.micra.services.SettlementService;
 import com.michaljk.micra.services.TripService;
@@ -40,8 +40,8 @@ public class MicraController {
     private final BalanceService balanceService;
 
     @PutMapping("settlement")
-    public SettlementResponse getSettlement(@RequestBody SettlementRequest settlementRequest) {
-        Period settlementPeriod = balanceService.getPeriod(settlementRequest.getMonth(), settlementRequest.getYear());
+    public WSSettlementResponse getSettlement(@RequestBody WSSettlementRequest WSSettlementRequest) throws Exception {
+        Period settlementPeriod = balanceService.getPeriod(WSSettlementRequest.getMonth(), WSSettlementRequest.getYear());
         return settlementService.getSettlement(settlementPeriod);
     }
 

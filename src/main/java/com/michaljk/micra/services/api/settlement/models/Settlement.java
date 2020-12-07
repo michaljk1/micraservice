@@ -1,16 +1,18 @@
-package com.michaljk.micra.services.api.settlement;
+package com.michaljk.micra.services.api.settlement.models;
 
+import com.michaljk.micra.services.api.settlement.ws.WSSettlementUser;
 import com.michaljk.micra.services.utils.SettlementUtils;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Setter
 @Getter
-public class SettlementResponse {
+public class Settlement {
 
-    public SettlementResponse(List<SettlementUser> users, Long totalKilometers){
+    public Settlement(List<SettlementUser> users, Long totalKilometers){
         this.users = users;
         this.totalKilometers = totalKilometers;
         this.gasCharge = SettlementUtils.convertKilometersToZl(totalKilometers);
