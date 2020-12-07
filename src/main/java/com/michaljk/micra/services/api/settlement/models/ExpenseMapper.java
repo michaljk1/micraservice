@@ -8,7 +8,7 @@ public class ExpenseMapper {
 
     public static Map<String, Object> mapExpenseToRequestMap(Expense expense){
         Map<String, Object> params = new HashMap<>();
-        params.put("cost", "0.00");
+        params.put("cost", expense.getCost());
         params.put("description", "Micra");
         params.put("currency_code", "PLN");
         params.put("group_id", expense.getGroupId());
@@ -20,9 +20,9 @@ public class ExpenseMapper {
         List<SettlementUser> users = expense.getUsers();
         for (int i = 0; i < users.size(); i++){
             SettlementUser user = users.get(i);
-            params.put("users__"+i+"__user_id", user.getSplitwiseId());
-            params.put("users__"+i+"__paid_share", user.isPaying() ? expense.getCost() : "0.00");
-            params.put("users__"+i+"__owed_share", user.getTotalCharge().toString());
+            params.put("users__" + i + "__user_id", user.getSplitwiseId());
+            params.put("users__" + i + "__paid_share", user.isPaying() ? expense.getCost() : "0.00");
+            params.put("users__" + i + "__owed_share", user.getTotalCharge().toString());
         }
     }
 }
