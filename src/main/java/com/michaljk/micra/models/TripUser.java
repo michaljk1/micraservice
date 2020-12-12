@@ -36,7 +36,6 @@ public class TripUser {
     @JoinColumn(name = "TUS_TRP_ID")
     private Trip trip;
 
-
     @Transient
     public User user;
 

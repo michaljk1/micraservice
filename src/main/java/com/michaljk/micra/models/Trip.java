@@ -21,6 +21,10 @@ import java.util.List;
 @Table(name = "TRIPS")
 public class Trip {
 
+    public Trip() {
+        this.tripDate = new Date();
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "TRP_ID")

@@ -3,7 +3,6 @@ package com.michaljk.micra.services;
 import com.michaljk.micra.models.Balance;
 import com.michaljk.micra.models.Trip;
 import com.michaljk.micra.models.TripUser;
-import com.michaljk.micra.models.User;
 import com.michaljk.micra.repositories.BalanceRepository;
 import com.michaljk.micra.repositories.TripRepository;
 import com.michaljk.micra.repositories.TripUserRepository;
@@ -11,7 +10,6 @@ import com.michaljk.micra.services.utils.DateUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -26,8 +24,6 @@ public class TripService {
 
     public void addTrip(List<TripUser> tripUsers, boolean updateBalance) {
         Trip trip = new Trip();
-        trip.setTripUsers(tripUsers);
-        trip.setTripDate(new Date());
         long tripKilometers = 0L;
         for (TripUser tripUser : tripUsers) {
             Balance balance = balanceService.getUserBalance(tripUser.getUser(), DateUtils.getCurrentMonth(), DateUtils.getCurrentYear());

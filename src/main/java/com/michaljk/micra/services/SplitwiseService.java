@@ -31,19 +31,18 @@ public class SplitwiseService {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setBearerAuth(Objects.requireNonNull(environment.getProperty("splitwise.bearer")));
-        Expense expense = new Expense();
-        expense.setCost(settlement.getTotalCharge().toString());
-        expense.setGroupId(Integer.valueOf(Objects.requireNonNull(environment.getProperty("splitwise.groupId"))));
-        expense.setUsers(settlement.getUsers());
-        Map<String,Object> expenseRequest = ExpenseMapper.mapExpenseToRequestMap(expense);
-        HttpEntity<Map<String,Object>> entity = new HttpEntity<>(expenseRequest, headers);
+        Expense expense = Expense.builder().cost(settlement.getTotalCharge().toString())
+                .groupId(Integer.valueOf(Objects.requireNonNull(environment.getProperty("splitwise.groupId"))))
+                .users(settlement.getUsers()).build();
+        Map<String, Object> expenseRequest = ExpenseMapper.mapExpenseToRequestMap(expense);
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(expenseRequest, headers);
         ResponseEntity<String> response = restTemplate.exchange(CREATE_EXPENSE_URL, HttpMethod.POST, entity, String.class);
         spyResponse(response);
     }
 
     //splitwise api returns 200 with errors
     private void spyResponse(ResponseEntity<String> response) throws Exception {
-        if (HttpStatus.OK.equals(response.getStatusCode()) && response.getBody()!=null && !response.getBody().contains("error")){
+        if (HttpStatus.OK.equals(response.getStatusCode()) && response.getBody() != null && !response.getBody().contains("base")) {
             return;
         } else {
             throw new Exception("Splitwise call failed");
