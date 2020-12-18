@@ -32,6 +32,12 @@ public class User {
     @Column(name = "USR_SPLITWISE_ID")
     private Integer splitwiseId;
 
+    @Column(name = "USR_EMAIL")
+    private String email;
+
+    @Column(name = "USR_PASSWORD")
+    private String password;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Balance> balances = new ArrayList<>();
 }

@@ -1,8 +1,8 @@
 package com.michaljk.micra.services;
 
-import com.michaljk.micra.services.api.settlement.models.Expense;
-import com.michaljk.micra.services.api.settlement.models.ExpenseMapper;
-import com.michaljk.micra.services.api.settlement.models.Settlement;
+import com.michaljk.micra.services.dto.settlement.models.Expense;
+import com.michaljk.micra.services.dto.settlement.models.ExpenseMapper;
+import com.michaljk.micra.services.dto.settlement.models.Settlement;
 import lombok.AllArgsConstructor;
 
 import org.springframework.core.env.Environment;

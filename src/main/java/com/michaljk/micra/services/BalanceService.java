@@ -1,12 +1,9 @@
 package com.michaljk.micra.services;
 
 import com.michaljk.micra.models.Balance;
-import com.michaljk.micra.models.Car;
 import com.michaljk.micra.models.Period;
 import com.michaljk.micra.models.User;
-import com.michaljk.micra.repositories.CarRepository;
 import com.michaljk.micra.repositories.PeriodRepository;
-import com.michaljk.micra.services.api.car.WSCarRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

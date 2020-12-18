@@ -1,4 +1,4 @@
-package com.michaljk.micra.services.api.settlement.ws;
+package com.michaljk.micra.services.dto.settlement.ws;
 
 
 import lombok.Getter;

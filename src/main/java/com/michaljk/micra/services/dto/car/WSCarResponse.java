@@ -1,4 +1,4 @@
-package com.michaljk.micra.services.api.car;
+package com.michaljk.micra.services.dto.car;
 
 import com.michaljk.micra.models.Car;
 import lombok.Getter;

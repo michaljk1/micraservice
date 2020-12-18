@@ -1,6 +1,6 @@
-package com.michaljk.micra.services.api.settlement.ws;
+package com.michaljk.micra.services.dto.settlement.ws;
 
-import com.michaljk.micra.services.api.settlement.models.Settlement;
+import com.michaljk.micra.services.dto.settlement.models.Settlement;
 import lombok.Getter;
 import lombok.Setter;
 

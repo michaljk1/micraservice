@@ -1,12 +1,10 @@
-package com.michaljk.micra.services.api.settlement.models;
+package com.michaljk.micra.services.dto.settlement.models;
 
-import com.michaljk.micra.services.api.settlement.ws.WSSettlementUser;
 import com.michaljk.micra.services.utils.SettlementUtils;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Setter
 @Getter

@@ -4,14 +4,14 @@ import com.michaljk.micra.models.Period;
 import com.michaljk.micra.models.TripUser;
 import com.michaljk.micra.services.BalanceService;
 import com.michaljk.micra.services.CarService;
-import com.michaljk.micra.services.UserService;
-import com.michaljk.micra.services.api.car.WSCarRequest;
-import com.michaljk.micra.services.api.car.WSCarResponse;
-import com.michaljk.micra.services.api.settlement.ws.WSSettlementRequest;
-import com.michaljk.micra.services.api.settlement.ws.WSSettlementResponse;
-import com.michaljk.micra.services.api.trip.TripRequest;
 import com.michaljk.micra.services.SettlementService;
 import com.michaljk.micra.services.TripService;
+import com.michaljk.micra.services.UserService;
+import com.michaljk.micra.services.dto.car.WSCarRequest;
+import com.michaljk.micra.services.dto.car.WSCarResponse;
+import com.michaljk.micra.services.dto.settlement.ws.WSSettlementRequest;
+import com.michaljk.micra.services.dto.settlement.ws.WSSettlementResponse;
+import com.michaljk.micra.services.dto.trip.TripRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
@@ -63,11 +62,6 @@ public class MicraController {
         return new WSCarResponse(carService.getCar());
     }
 
-    @PostMapping("user")
-    public ResponseEntity<String> addUser(@RequestParam String name) {
-        userService.addUser(name);
-        return new ResponseEntity<>("OK", HttpStatus.OK);
-    }
 
     @PostMapping("fuel")
     public ResponseEntity<String> updateFuelUsage(@RequestBody Float fuelUsage) {

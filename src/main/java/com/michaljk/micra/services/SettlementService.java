@@ -4,9 +4,9 @@ import com.michaljk.micra.models.Balance;
 import com.michaljk.micra.models.Period;
 import com.michaljk.micra.models.User;
 import com.michaljk.micra.repositories.UserRepository;
-import com.michaljk.micra.services.api.settlement.models.Settlement;
-import com.michaljk.micra.services.api.settlement.ws.WSSettlementResponse;
-import com.michaljk.micra.services.api.settlement.models.SettlementUser;
+import com.michaljk.micra.services.dto.settlement.models.Settlement;
+import com.michaljk.micra.services.dto.settlement.ws.WSSettlementResponse;
+import com.michaljk.micra.services.dto.settlement.models.SettlementUser;
 import com.michaljk.micra.services.utils.MathUtils;
 import com.michaljk.micra.services.utils.SettlementUtils;
 import lombok.AllArgsConstructor;
@@ -21,7 +21,7 @@ import java.util.Optional;
 public class SettlementService {
 
     private static final String PAYING_USER = "Michal";
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final SplitwiseService splitwiseService;
 
     public WSSettlementResponse getSettlement(Period period) throws Exception {
@@ -36,7 +36,7 @@ public class SettlementService {
     }
 
     private List<SettlementUser> getUsersForSettlement(Period period) {
-        List<User> users = userRepository.findAll();
+        List<User> users = userService.getAllUsers();
         List<SettlementUser> settlementUsers = new ArrayList<>();
         for (User user : users) {
             Optional<Balance> balance = user.getBalances().

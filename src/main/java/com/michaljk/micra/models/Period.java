@@ -29,12 +29,11 @@ public class Period {
     @Column(name = "PER_YEAR")
     private Integer year;
 
-
     public boolean periodEqual(Period other) {
         return periodEqual(other.getMonth(), other.getYear());
     }
 
     public boolean periodEqual(String month, Integer year){
-        return  getMonth().equals(month) && getYear().equals(year);
+        return getMonth().equals(month) && getYear().equals(year);
     }
 }

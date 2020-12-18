@@ -2,7 +2,7 @@ package com.michaljk.micra.services;
 
 import com.michaljk.micra.models.Car;
 import com.michaljk.micra.repositories.CarRepository;
-import com.michaljk.micra.services.api.car.WSCarRequest;
+import com.michaljk.micra.services.dto.car.WSCarRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

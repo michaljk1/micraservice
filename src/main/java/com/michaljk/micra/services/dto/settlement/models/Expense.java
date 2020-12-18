@@ -1,4 +1,4 @@
-package com.michaljk.micra.services.api.settlement.models;
+package com.michaljk.micra.services.dto.settlement.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

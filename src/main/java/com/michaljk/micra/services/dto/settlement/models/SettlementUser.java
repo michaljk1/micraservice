@@ -1,8 +1,5 @@
-package com.michaljk.micra.services.api.settlement.models;
+package com.michaljk.micra.services.dto.settlement.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.michaljk.micra.services.utils.MathUtils;
-import com.michaljk.micra.services.utils.SettlementUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.michaljk.micra.services.api.trip;
+package com.michaljk.micra.services.dto.trip;
 
 import lombok.Getter;
 import lombok.Setter;
