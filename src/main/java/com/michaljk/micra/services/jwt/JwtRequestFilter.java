@@ -1,6 +1,6 @@
 package com.michaljk.micra.services.jwt;
 
-import com.michaljk.micra.services.utils.StringUtils;
+import com.michaljk.micra.utils.StringUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

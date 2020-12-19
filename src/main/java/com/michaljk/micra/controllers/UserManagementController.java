@@ -33,5 +33,4 @@ public class UserManagementController {
         return ResponseEntity.ok(authService.authenticateUser(authRequest));
     }
 
-
 }

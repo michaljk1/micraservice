@@ -3,6 +3,7 @@ package com.michaljk.micra.services;
 import com.michaljk.micra.models.Balance;
 import com.michaljk.micra.models.Period;
 import com.michaljk.micra.models.User;
+import com.michaljk.micra.repositories.BalanceRepository;
 import com.michaljk.micra.repositories.PeriodRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,18 +13,12 @@ import org.springframework.stereotype.Service;
 public class BalanceService {
 
     private final PeriodRepository periodRepository;
+    private final BalanceRepository balanceRepository;
 
-    public Balance getUserBalance(User user, String month, Integer year){
-        Period period = getPeriod(month, year);
-        Balance balance = user.getBalances().stream()
-                .filter(b -> b.getPeriod().periodEqual(period))
-                .findFirst().orElse(null);
-        if (balance == null) {
-            balance = new Balance();
-            balance.setUser(user);
-            balance.setPeriod(period);
-        }
-        return balance;
+    public Balance getUserBalance(User user, Period period) {
+        return user.getBalances().stream()
+                .filter(b -> b.getPeriod().equals(period))
+                .findFirst().orElse(getCreatedBalance(user, period));
     }
 
     public void addKilometersToBalance(Balance balance, long userKilometers, boolean updateBalance) {
@@ -34,6 +29,18 @@ public class BalanceService {
         }
     }
 
+    public Period getPeriod(String month, Integer year) {
+        return periodRepository.findByMonthAndYear(month, year).orElse(getCreatedPeriod(month, year));
+    }
+
+    public void saveBalance(Balance balance) {
+        balanceRepository.save(balance);
+    }
+
+    public void savePeriod(Period period) {
+        periodRepository.save(period);
+    }
+
     private Period getCreatedPeriod(String month, Integer year) {
         Period period = new Period();
         period.setMonth(month);
@@ -41,7 +48,10 @@ public class BalanceService {
         return period;
     }
 
-    public Period getPeriod(String month, Integer year) {
-        return periodRepository.findByMonthAndYear(month, year).orElse(getCreatedPeriod(month, year));
+    private Balance getCreatedBalance(User user, Period period) {
+        Balance balance = new Balance();
+        balance.setUser(user);
+        balance.setPeriod(period);
+        return balance;
     }
 }

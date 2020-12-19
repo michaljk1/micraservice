@@ -1,4 +1,4 @@
-package com.michaljk.micra.services.utils;
+package com.michaljk.micra.utils;
 
 import java.util.Objects;
 

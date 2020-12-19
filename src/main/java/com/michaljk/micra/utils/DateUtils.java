@@ -1,7 +1,6 @@
-package com.michaljk.micra.services.utils;
+package com.michaljk.micra.utils;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 public class DateUtils {

@@ -19,6 +19,7 @@ public class WSSettlementResponse {
         this.litersOfGasPer100Km = settlement.getLitersOfGasPer100Km();
         this.priceOfOneLiterOfGas = settlement.getPriceOfOneLiterOfGas();
         this.parkingCharge = settlement.getParkingCharge();
+        this.alreadySettled = settlement.isAlreadySettled();
     }
 
     private Double litersOfGasPer100Km;
@@ -27,6 +28,7 @@ public class WSSettlementResponse {
     private Long totalKilometers;
     private Double gasCharge;
     private Double totalCharge;
+    private boolean alreadySettled;
     private List<WSSettlementUser> users;
 
 }

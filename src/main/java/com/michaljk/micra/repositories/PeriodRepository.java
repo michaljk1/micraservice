@@ -1,10 +1,7 @@
 package com.michaljk.micra.repositories;
 
 import com.michaljk.micra.models.Period;
-import com.michaljk.micra.models.Trip;
-import com.michaljk.micra.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.Optional;
 
 

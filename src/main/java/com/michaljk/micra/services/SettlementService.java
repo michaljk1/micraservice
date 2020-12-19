@@ -3,13 +3,13 @@ package com.michaljk.micra.services;
 import com.michaljk.micra.models.Balance;
 import com.michaljk.micra.models.Period;
 import com.michaljk.micra.models.User;
-import com.michaljk.micra.repositories.UserRepository;
 import com.michaljk.micra.services.dto.settlement.models.Settlement;
-import com.michaljk.micra.services.dto.settlement.ws.WSSettlementResponse;
 import com.michaljk.micra.services.dto.settlement.models.SettlementUser;
-import com.michaljk.micra.services.utils.MathUtils;
-import com.michaljk.micra.services.utils.SettlementUtils;
+import com.michaljk.micra.services.dto.settlement.ws.WSSettlementResponse;
+import com.michaljk.micra.utils.MathUtils;
+import com.michaljk.micra.utils.SettlementUtils;
 import lombok.AllArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,9 +20,10 @@ import java.util.Optional;
 @AllArgsConstructor
 public class SettlementService {
 
-    private static final String PAYING_USER = "Michal";
     private final UserService userService;
     private final SplitwiseService splitwiseService;
+    private final Environment environment;
+    private final BalanceService balanceService;
 
     public WSSettlementResponse getSettlement(Period period) throws Exception {
         List<SettlementUser> users = getUsersForSettlement(period);
@@ -30,8 +31,13 @@ public class SettlementService {
                 .map(SettlementUser::getKilometers)
                 .reduce(0L, Long::sum);
         users.forEach(user -> calculateCharges(user, totalKilometers));
-        Settlement settlement = new Settlement(users, totalKilometers);
-        splitwiseService.createExpense(settlement);
+        boolean alreadySettled = period.isSettled();
+        Settlement settlement = new Settlement(users, totalKilometers, alreadySettled);
+        if(Boolean.FALSE.equals(alreadySettled)) {
+            splitwiseService.createExpense(settlement);
+        }
+        period.setSettled(true);
+        balanceService.savePeriod(period);
         return new WSSettlementResponse(settlement);
     }
 
@@ -40,14 +46,14 @@ public class SettlementService {
         List<SettlementUser> settlementUsers = new ArrayList<>();
         for (User user : users) {
             Optional<Balance> balance = user.getBalances().
-                    stream().filter(b -> b.getPeriod().periodEqual(period)).findFirst();
+                    stream().filter(b -> b.getPeriod().equals(period)).findFirst();
             balance.ifPresent(value -> settlementUsers.add(getSettlementUser(user, value.getKilometers())));
         }
         return settlementUsers;
     }
 
     private SettlementUser getSettlementUser(User user, Long kilometers) {
-        boolean paying = user.getName().equals(PAYING_USER);
+        boolean paying = user.getName().equals(environment.getProperty("splitwise.payingUser"));
         return new SettlementUser(user.getName(), kilometers, user.getSplitwiseId(), paying);
     }
 

@@ -1,6 +1,6 @@
 package com.michaljk.micra.services.dto.settlement.models;
 
-import com.michaljk.micra.services.utils.SettlementUtils;
+import com.michaljk.micra.utils.SettlementUtils;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,11 +10,12 @@ import java.util.List;
 @Getter
 public class Settlement {
 
-    public Settlement(List<SettlementUser> users, Long totalKilometers){
+    public Settlement(List<SettlementUser> users, Long totalKilometers, boolean alreadySettled){
         this.users = users;
         this.totalKilometers = totalKilometers;
         this.gasCharge = SettlementUtils.convertKilometersToZl(totalKilometers);
         this.totalCharge = gasCharge + parkingCharge;
+        this.alreadySettled = alreadySettled;
     }
 
     private Double litersOfGasPer100Km = SettlementUtils.LITERS_OF_GAS_PER_100KM;
@@ -23,6 +24,7 @@ public class Settlement {
     private Long totalKilometers;
     private Double gasCharge;
     private Double totalCharge;
+    private boolean alreadySettled;
     private List<SettlementUser> users;
 
 }

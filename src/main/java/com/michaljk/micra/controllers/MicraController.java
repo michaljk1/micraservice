@@ -46,7 +46,7 @@ public class MicraController {
 
     @PostMapping("trip")
     public ResponseEntity<String> addTrip(@RequestBody TripRequest tripRequest) {
-        List<TripUser> tripUsers = userService.mapToTripUsersByName(tripRequest.getTripUsers());
+        List<TripUser> tripUsers = userService.mapToTripUsers(tripRequest.getTripUsers());
         tripService.addTrip(tripUsers, tripRequest.isUpdateBalance());
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }
@@ -68,6 +68,5 @@ public class MicraController {
         carService.updateFuelUsage(fuelUsage);
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }
-
 
 }

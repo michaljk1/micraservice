@@ -7,8 +7,8 @@ import com.michaljk.micra.services.dto.trip.TripUserRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -21,12 +21,8 @@ public class UserService {
         return userRepository.findByName(name).orElseThrow();
     }
 
-    public List<TripUser> mapToTripUsersByName(List<TripUserRequest> requestUsers) {
-        List<TripUser> users = new ArrayList<>();
-        for (TripUserRequest tripUserRequest : requestUsers) {
-            users.add(getMappedTripUser(tripUserRequest));
-        }
-        return users;
+    public List<TripUser> mapToTripUsers(List<TripUserRequest> requestUsers) {
+        return requestUsers.stream().map(this::getMappedTripUser).collect(Collectors.toList());
     }
 
     private TripUser getMappedTripUser(TripUserRequest tripUserRequest) {

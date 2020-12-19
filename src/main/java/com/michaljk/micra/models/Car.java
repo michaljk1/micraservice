@@ -28,9 +28,5 @@ public class Car {
     @Column(name = "car_fuel_usage")
     private Float fuelUsage;
 
-
-//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "car")
-//    private List<CarEvent> events = new ArrayList<>();
-
 }
 
