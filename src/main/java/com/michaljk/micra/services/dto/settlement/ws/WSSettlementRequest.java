@@ -7,6 +7,8 @@ import lombok.Setter;
 @Setter
 @Getter
 public class WSSettlementRequest {
+
     private String month;
     private Integer year;
+    private boolean callSplitwise;
 }

@@ -25,7 +25,7 @@ public class SettlementService {
     private final Environment environment;
     private final BalanceService balanceService;
 
-    public WSSettlementResponse getSettlement(Period period) throws Exception {
+    public WSSettlementResponse createSettlement(Period period, boolean callSplitwise) throws Exception {
         List<SettlementUser> users = getUsersForSettlement(period);
         Long totalKilometers = users.stream()
                 .map(SettlementUser::getKilometers)
@@ -33,11 +33,12 @@ public class SettlementService {
         users.forEach(user -> calculateCharges(user, totalKilometers));
         boolean alreadySettled = period.isSettled();
         Settlement settlement = new Settlement(users, totalKilometers, alreadySettled);
-        if(Boolean.FALSE.equals(alreadySettled)) {
+        if(callSplitwise && Boolean.FALSE.equals(alreadySettled)) {
             splitwiseService.createExpense(settlement);
+            period.setSettled(true);
+            settlement.setSettlingRequest(true);
+            balanceService.savePeriod(period);
         }
-        period.setSettled(true);
-        balanceService.savePeriod(period);
         return new WSSettlementResponse(settlement);
     }
 

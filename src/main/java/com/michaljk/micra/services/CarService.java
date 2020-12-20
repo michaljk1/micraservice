@@ -1,26 +1,21 @@
 package com.michaljk.micra.services;
 
 import com.michaljk.micra.models.Car;
+import com.michaljk.micra.models.Event;
 import com.michaljk.micra.repositories.CarRepository;
-import com.michaljk.micra.services.dto.car.WSCarRequest;
+import com.michaljk.micra.repositories.EventRepository;
+import com.michaljk.micra.services.dto.events.WSEventRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 @Service
 @AllArgsConstructor
 public class CarService {
 
     final private CarRepository carRepository;
-
-    public void addCar(WSCarRequest newCar) throws Exception {
-        if(carRepository.findAll().size() > 0 ){
-            throw new Exception("Car already exists");
-        }
-        Car car = new Car();
-        car.setName(newCar.getName());
-        car.setOdometer(newCar.getOdometer());
-        carRepository.save(car);
-    }
+    final private EventRepository eventRepository;
 
     public void updateCarOdometer(Long kilometers){
         Car car = getCar();
@@ -36,5 +31,15 @@ public class CarService {
 
     public Car getCar(){
         return carRepository.findAll().stream().findFirst().orElseThrow();
+    }
+
+    public void addEvent(WSEventRequest eventRequest) {
+        Event event = new Event();
+        event.setName(eventRequest.getName());
+        event.setDate(eventRequest.getDate() == null ? new Date() : eventRequest.getDate());
+        event.setDescription(eventRequest.getDescription());
+        event.setPrice(eventRequest.getPrice());
+        event.setOdometer(eventRequest.getOdometer());
+        eventRepository.save(event);
     }
 }

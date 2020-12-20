@@ -7,8 +7,8 @@ import com.michaljk.micra.services.CarService;
 import com.michaljk.micra.services.SettlementService;
 import com.michaljk.micra.services.TripService;
 import com.michaljk.micra.services.UserService;
-import com.michaljk.micra.services.dto.car.WSCarRequest;
 import com.michaljk.micra.services.dto.car.WSCarResponse;
+import com.michaljk.micra.services.dto.events.WSEventRequest;
 import com.michaljk.micra.services.dto.settlement.ws.WSSettlementRequest;
 import com.michaljk.micra.services.dto.settlement.ws.WSSettlementResponse;
 import com.michaljk.micra.services.dto.trip.TripRequest;
@@ -39,22 +39,16 @@ public class MicraController {
     private final BalanceService balanceService;
 
     @PutMapping("settlement")
-    public WSSettlementResponse getSettlement(@RequestBody WSSettlementRequest WSSettlementRequest) throws Exception {
-        Period settlementPeriod = balanceService.getPeriod(WSSettlementRequest.getMonth(), WSSettlementRequest.getYear());
-        return settlementService.getSettlement(settlementPeriod);
+    public WSSettlementResponse getSettlement(@RequestBody WSSettlementRequest settlementRequest) throws Exception {
+        Period settlementPeriod = balanceService.getPeriod(settlementRequest.getMonth(), settlementRequest.getYear());
+        return settlementService.createSettlement(settlementPeriod, settlementRequest.isCallSplitwise());
     }
 
     @PostMapping("trip")
     public ResponseEntity<String> addTrip(@RequestBody TripRequest tripRequest) {
         List<TripUser> tripUsers = userService.mapToTripUsers(tripRequest.getTripUsers());
         tripService.addTrip(tripUsers, tripRequest.isUpdateBalance());
-        return new ResponseEntity<>("OK", HttpStatus.OK);
-    }
-
-    @PostMapping("car")
-    public ResponseEntity<String> addCar(@RequestBody WSCarRequest carRequest) throws Exception {
-        carService.addCar(carRequest);
-        return new ResponseEntity<>("OK", HttpStatus.OK);
+        return new ResponseEntity<>("Trip added", HttpStatus.OK);
     }
 
     @GetMapping("getCar")
@@ -62,11 +56,16 @@ public class MicraController {
         return new WSCarResponse(carService.getCar());
     }
 
-
     @PostMapping("fuel")
     public ResponseEntity<String> updateFuelUsage(@RequestBody Float fuelUsage) {
         carService.updateFuelUsage(fuelUsage);
-        return new ResponseEntity<>("OK", HttpStatus.OK);
+        return new ResponseEntity<>("Fuel usage changed", HttpStatus.OK);
+    }
+
+    @PostMapping("event")
+    public ResponseEntity<String> addEvent(@RequestBody WSEventRequest eventRequest){
+        carService.addEvent(eventRequest);
+        return new ResponseEntity<>("Event added", HttpStatus.OK);
     }
 
 }

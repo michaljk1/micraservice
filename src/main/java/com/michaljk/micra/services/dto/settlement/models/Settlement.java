@@ -25,6 +25,7 @@ public class Settlement {
     private Double gasCharge;
     private Double totalCharge;
     private boolean alreadySettled;
+    private boolean settlingRequest;
     private List<SettlementUser> users;
 
 }
