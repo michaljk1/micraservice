@@ -14,7 +14,7 @@ public class WSBalance {
 
     public WSBalance(Balance balance) {
         name = balance.getUser().getName();
-        kilometers = balance.getKilometers();
-        freeKilometers = balance.getFreeKilometers();
+        kilometers = balance.getParkingKilometers();
+        freeKilometers = balance.getParkingFreeKilometers();
     }
 }

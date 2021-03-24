@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -57,7 +58,7 @@ public class MicraController {
     }
 
     @PostMapping("trip")
-    public ResponseEntity<String> addTrip(@RequestBody TripRequest tripRequest) throws ApplicationException {
+    public ResponseEntity<String> addTrip(@RequestBody @Valid TripRequest tripRequest) throws ApplicationException {
         List<TripUser> tripUsers = userService.mapToTripUsers(tripRequest.getTripUsers());
         tripService.addTrip(tripUsers, tripRequest.isUpdateBalance());
         return new ResponseEntity<>("Trip added", HttpStatus.OK);

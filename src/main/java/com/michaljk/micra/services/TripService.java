@@ -5,7 +5,6 @@ import com.michaljk.micra.models.Period;
 import com.michaljk.micra.models.Trip;
 import com.michaljk.micra.models.TripUser;
 import com.michaljk.micra.repositories.TripRepository;
-import com.michaljk.micra.repositories.TripUserRepository;
 import com.michaljk.micra.utils.DateUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,6 @@ import java.util.List;
 public class TripService {
 
     private final TripRepository tripRepository;
-    private final TripUserRepository tripUserRepository;
     private final CarService carService;
     private final BalanceService balanceService;
 
@@ -39,9 +37,8 @@ public class TripService {
     }
 
     private void saveTrip(Trip trip, List<TripUser> tripUsers) {
+        trip.setTripUsers(tripUsers);
         tripRepository.save(trip);
-        tripUsers.forEach(tripUser -> tripUser.setTrip(trip));
-        tripUserRepository.saveAll(tripUsers);
     }
 
 }

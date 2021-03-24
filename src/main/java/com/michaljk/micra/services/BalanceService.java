@@ -23,9 +23,9 @@ public class BalanceService {
 
     public void addKilometersToBalance(Balance balance, long userKilometers, boolean updateBalance) {
         if (updateBalance) {
-            balance.setKilometers(balance.getKilometers() + userKilometers);
+            balance.setParkingKilometers(balance.getParkingKilometers() + userKilometers);
         } else {
-            balance.setFreeKilometers(balance.getFreeKilometers() + userKilometers);
+            balance.setParkingFreeKilometers(balance.getParkingFreeKilometers() + userKilometers);
         }
     }
 

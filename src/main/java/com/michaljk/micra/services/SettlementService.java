@@ -48,7 +48,7 @@ public class SettlementService {
         for (User user : users) {
             Optional<Balance> balance = user.getBalances().
                     stream().filter(b -> b.getPeriod().equals(period)).findFirst();
-            balance.ifPresent(value -> settlementUsers.add(getSettlementUser(user, value.getKilometers())));
+            balance.ifPresent(value -> settlementUsers.add(getSettlementUser(user, value.getParkingKilometers())));
         }
         return settlementUsers;
     }

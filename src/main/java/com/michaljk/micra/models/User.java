@@ -2,9 +2,7 @@ package com.michaljk.micra.models;
 
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Builder;
 import lombok.Data;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

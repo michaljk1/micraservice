@@ -2,16 +2,8 @@ package com.michaljk.micra.models;
 
 
 import lombok.Data;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,5 +33,14 @@ public class Trip {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "trip")
     private List<TripUser> tripUsers = new ArrayList<>();
+
+
+    @PrePersist
+    private void prePersist(){
+        for(TripUser tripUser : tripUsers) {
+            tripUser.setTrip(this);
+        }
+    }
+
 
 }

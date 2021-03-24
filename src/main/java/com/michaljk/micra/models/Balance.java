@@ -29,10 +29,13 @@ public class Balance {
     private Period period;
 
     @Column(name = "BAL_KMS")
-    private Long kilometers = 0L;
+    private Long parkingKilometers = 0L;
 
     @Column(name = "BAL_FREE_KMS")
-    private Long freeKilometers = 0L;
+    private Long parkingFreeKilometers = 0L;
+
+    @Column(name = "BAL_TKN_OVER_KMS")
+    private Long parkingTakenOverKilometers = 0L;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "BAL_USR_ID")
