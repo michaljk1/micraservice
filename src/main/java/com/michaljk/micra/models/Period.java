@@ -2,12 +2,9 @@ package com.michaljk.micra.models;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Data
@@ -28,6 +25,9 @@ public class Period {
 
     @Column(name = "PER_SETTLED")
     private boolean settled;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "period")
+    private List<Balance> balances = new ArrayList<>();
 
     @Override
     public boolean equals(Object object) {

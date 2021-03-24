@@ -24,7 +24,7 @@ public class TripService {
     public void addTrip(List<TripUser> tripUsers, boolean updateBalance) {
         Trip trip = new Trip();
         long tripKilometers = 0L;
-        Period period = balanceService.getPeriod(DateUtils.getCurrentMonth(), DateUtils.getCurrentYear());
+        Period period = balanceService.findPeriodOrCreateNew(DateUtils.getCurrentMonth(), DateUtils.getCurrentYear());
         for (TripUser tripUser : tripUsers) {
             Balance balance = balanceService.getUserBalance(tripUser.getUser(), period);
             long userKilometers = tripUser.getKilometers();

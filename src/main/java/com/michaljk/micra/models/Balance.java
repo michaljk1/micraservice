@@ -1,9 +1,6 @@
 package com.michaljk.micra.models;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.tomcat.jni.Address;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,7 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 
@@ -28,7 +24,7 @@ public class Balance {
     @Column(name = "BAL_ID")
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "BAL_PER_ID", referencedColumnName = "PER_ID")
     private Period period;
 

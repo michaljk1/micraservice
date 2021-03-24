@@ -1,5 +1,6 @@
 package com.michaljk.micra.controllers;
 
+import com.michaljk.micra.exceptions.ApplicationException;
 import com.michaljk.micra.models.Period;
 import com.michaljk.micra.models.TripUser;
 import com.michaljk.micra.services.BalanceService;
@@ -7,6 +8,7 @@ import com.michaljk.micra.services.CarService;
 import com.michaljk.micra.services.SettlementService;
 import com.michaljk.micra.services.TripService;
 import com.michaljk.micra.services.UserService;
+import com.michaljk.micra.services.dto.period.ws.WSPeriodResponse;
 import com.michaljk.micra.services.dto.car.WSCarResponse;
 import com.michaljk.micra.services.dto.events.WSEventRequest;
 import com.michaljk.micra.services.dto.settlement.ws.WSSettlementRequest;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
@@ -40,12 +43,21 @@ public class MicraController {
 
     @PutMapping("settlement")
     public WSSettlementResponse getSettlement(@RequestBody WSSettlementRequest settlementRequest) throws Exception {
-        Period settlementPeriod = balanceService.getPeriod(settlementRequest.getMonth(), settlementRequest.getYear());
+        Period settlementPeriod = balanceService.findPeriodOrCreateNew(settlementRequest.getMonth(), settlementRequest.getYear());
         return settlementService.createSettlement(settlementPeriod, settlementRequest.isCallSplitwise());
     }
 
+    @GetMapping("period")
+    public WSPeriodResponse getPeriod(
+            @RequestParam Integer year,
+            @RequestParam String month
+            ) {
+        Period period = balanceService.getPeriod(month, year);
+        return new WSPeriodResponse(period);
+    }
+
     @PostMapping("trip")
-    public ResponseEntity<String> addTrip(@RequestBody TripRequest tripRequest) {
+    public ResponseEntity<String> addTrip(@RequestBody TripRequest tripRequest) throws ApplicationException {
         List<TripUser> tripUsers = userService.mapToTripUsers(tripRequest.getTripUsers());
         tripService.addTrip(tripUsers, tripRequest.isUpdateBalance());
         return new ResponseEntity<>("Trip added", HttpStatus.OK);

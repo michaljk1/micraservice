@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface PeriodRepository extends JpaRepository<Period, Long> {
     Optional<Period> findByMonthAndYear(String month, Integer year);
+    Period getByMonthAndYear(String month, Integer year);
 }

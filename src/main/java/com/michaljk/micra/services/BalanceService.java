@@ -29,8 +29,12 @@ public class BalanceService {
         }
     }
 
-    public Period getPeriod(String month, Integer year) {
+    public Period findPeriodOrCreateNew(String month, Integer year) {
         return periodRepository.findByMonthAndYear(month, year).orElse(getCreatedPeriod(month, year));
+    }
+
+    public Period getPeriod(String month, Integer year) {
+        return periodRepository.getByMonthAndYear(month, year);
     }
 
     public void saveBalance(Balance balance) {
