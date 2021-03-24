@@ -1,5 +1,6 @@
-package com.michaljk.micra.models;
+package com.michaljk.micra.models.trip;
 
+import com.michaljk.micra.models.User;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -21,10 +22,13 @@ public class TripUser {
     private Long kilometers = 0L;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TUS_TRP_ID")
+    @JoinColumn(name = "TUS_TRP_ID", referencedColumnName = "TRP_ID")
     private Trip trip;
 
     @Transient
     public User user;
+
+    @Transient
+    boolean parkingUser;
 
 }

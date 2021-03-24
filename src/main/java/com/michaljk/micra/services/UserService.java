@@ -2,7 +2,7 @@ package com.michaljk.micra.services;
 
 import com.michaljk.micra.exceptions.AppExceptions;
 import com.michaljk.micra.exceptions.ApplicationException;
-import com.michaljk.micra.models.TripUser;
+import com.michaljk.micra.models.trip.TripUser;
 import com.michaljk.micra.models.User;
 import com.michaljk.micra.repositories.UserRepository;
 import com.michaljk.micra.services.dto.trip.TripUserRequest;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -24,20 +23,22 @@ public class UserService {
         return userRepository.findByName(name).orElseThrow(() -> new ApplicationException(AppExceptions.USER_NOT_FOUND));
     }
 
-    public List<TripUser> mapToTripUsers(List<TripUserRequest> requestUsers) throws ApplicationException {
+    public List<TripUser> mapToTripUsers(List<TripUserRequest> requestUsers, String parkingUser) throws ApplicationException {
         List<TripUser> tripUsers = new ArrayList<>();
         for (TripUserRequest tripUserRequest : requestUsers){
-            tripUsers.add(getMappedTripUser(tripUserRequest));
+            tripUsers.add(getMappedTripUser(tripUserRequest, parkingUser));
         }
         return tripUsers;
     }
 
-    private TripUser getMappedTripUser(TripUserRequest tripUserRequest) throws ApplicationException {
-        User user = getUserByName(tripUserRequest.getName());
+    private TripUser getMappedTripUser(TripUserRequest tripUserRequest, String parkingUser) throws ApplicationException {
+        String name = tripUserRequest.getName();
+        User user = getUserByName(name);
         TripUser tripUser = new TripUser();
         tripUser.setUser(user);
         tripUser.setUserId(user.getId());
         tripUser.setKilometers(tripUserRequest.getKilometers());
+        tripUser.setParkingUser(name.equals(parkingUser));
         return tripUser;
     }
 

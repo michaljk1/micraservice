@@ -8,6 +8,8 @@ import com.michaljk.micra.repositories.PeriodRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class BalanceService {
@@ -40,6 +42,11 @@ public class BalanceService {
     public void saveBalance(Balance balance) {
         balanceRepository.save(balance);
     }
+
+    public void saveBalances(List<Balance> balances) {
+        balanceRepository.saveAll(balances);
+    }
+
 
     public void savePeriod(Period period) {
         periodRepository.save(period);

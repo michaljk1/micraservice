@@ -1,4 +1,4 @@
-package com.michaljk.micra.models;
+package com.michaljk.micra.models.trip;
 
 
 import lombok.Data;
@@ -31,7 +31,7 @@ public class Trip {
     @Column(name = "TRP_BALANCE")
     private boolean updateBalance;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "trip")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "trip", cascade=CascadeType.ALL)
     private List<TripUser> tripUsers = new ArrayList<>();
 
 

@@ -2,7 +2,7 @@ package com.michaljk.micra.controllers;
 
 import com.michaljk.micra.exceptions.ApplicationException;
 import com.michaljk.micra.models.Period;
-import com.michaljk.micra.models.TripUser;
+import com.michaljk.micra.models.trip.TripUser;
 import com.michaljk.micra.services.BalanceService;
 import com.michaljk.micra.services.CarService;
 import com.michaljk.micra.services.SettlementService;
@@ -14,6 +14,7 @@ import com.michaljk.micra.services.dto.events.WSEventRequest;
 import com.michaljk.micra.services.dto.settlement.ws.WSSettlementRequest;
 import com.michaljk.micra.services.dto.settlement.ws.WSSettlementResponse;
 import com.michaljk.micra.services.dto.trip.TripRequest;
+import com.michaljk.micra.utils.StringUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -59,8 +60,10 @@ public class MicraController {
 
     @PostMapping("trip")
     public ResponseEntity<String> addTrip(@RequestBody @Valid TripRequest tripRequest) throws ApplicationException {
-        List<TripUser> tripUsers = userService.mapToTripUsers(tripRequest.getTripUsers());
-        tripService.addTrip(tripUsers, tripRequest.isUpdateBalance());
+        String parkingUserName = tripRequest.getParkingUser();
+        List<TripUser> tripUsers = userService.mapToTripUsers(tripRequest.getTripUsers(), parkingUserName);
+        boolean parkingTakeOver = !StringUtils.isEmpty(parkingUserName);
+        tripService.addTrip(tripUsers, tripRequest.isUpdateBalance(), parkingTakeOver);
         return new ResponseEntity<>("Trip added", HttpStatus.OK);
     }
 
