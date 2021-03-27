@@ -34,12 +34,12 @@ public class UserService {
     private TripUser getMappedTripUser(TripUserRequest tripUserRequest, String parkingUser) throws ApplicationException {
         String name = tripUserRequest.getName();
         User user = getUserByName(name);
-        TripUser tripUser = new TripUser();
-        tripUser.setUser(user);
-        tripUser.setUserId(user.getId());
-        tripUser.setKilometers(tripUserRequest.getKilometers());
-        tripUser.setParkingUser(name.equals(parkingUser));
-        return tripUser;
+        return TripUser.builder()
+                .user(user)
+                .userId(user.getId())
+                .kilometers(tripUserRequest.getKilometers())
+                .parkingUser(name.equals(parkingUser))
+                .build();
     }
 
     public void saveUser(User user) {

@@ -2,6 +2,7 @@ package com.michaljk.micra.controllers;
 
 import com.michaljk.micra.exceptions.ApplicationException;
 import com.michaljk.micra.models.Period;
+import com.michaljk.micra.models.trip.TripSummary;
 import com.michaljk.micra.models.trip.TripUser;
 import com.michaljk.micra.services.BalanceService;
 import com.michaljk.micra.services.CarService;

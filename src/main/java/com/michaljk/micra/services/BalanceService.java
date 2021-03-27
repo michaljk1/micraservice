@@ -23,13 +23,6 @@ public class BalanceService {
                 .findFirst().orElse(getCreatedBalance(user, period));
     }
 
-    public void addKilometersToBalance(Balance balance, long userKilometers, boolean updateBalance) {
-        if (updateBalance) {
-            balance.setParkingKilometers(balance.getParkingKilometers() + userKilometers);
-        } else {
-            balance.setParkingFreeKilometers(balance.getParkingFreeKilometers() + userKilometers);
-        }
-    }
 
     public Period findPeriodOrCreateNew(String month, Integer year) {
         return periodRepository.findByMonthAndYear(month, year).orElse(getCreatedPeriod(month, year));
@@ -53,16 +46,15 @@ public class BalanceService {
     }
 
     private Period getCreatedPeriod(String month, Integer year) {
-        Period period = new Period();
-        period.setMonth(month);
-        period.setYear(year);
-        return period;
+        return Period.builder()
+                .month(month)
+                .year(year)
+                .build();
     }
 
     private Balance getCreatedBalance(User user, Period period) {
-        Balance balance = new Balance();
-        balance.setUser(user);
-        balance.setPeriod(period);
-        return balance;
+        return Balance.builder()
+                .user(user)
+                .period(period).build();
     }
 }

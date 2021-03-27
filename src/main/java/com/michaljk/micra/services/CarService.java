@@ -8,7 +8,10 @@ import com.michaljk.micra.services.dto.events.WSEventRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Date;
+
+import static javax.transaction.Transactional.TxType.REQUIRES_NEW;
 
 @Service
 @AllArgsConstructor
@@ -33,6 +36,7 @@ public class CarService {
         return carRepository.findAll().stream().findFirst().orElseThrow();
     }
 
+    @Transactional(REQUIRES_NEW)
     public void addEvent(WSEventRequest eventRequest) {
         Event event = new Event();
         event.setName(eventRequest.getName());

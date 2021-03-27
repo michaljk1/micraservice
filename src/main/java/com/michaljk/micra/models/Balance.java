@@ -1,5 +1,6 @@
 package com.michaljk.micra.models;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.CascadeType;
@@ -17,6 +18,7 @@ import javax.persistence.Table;
 @Data
 @Entity
 @Table(name = "BALANCES")
+@Builder
 public class Balance {
 
     @Id
@@ -29,16 +31,27 @@ public class Balance {
     private Period period;
 
     @Column(name = "BAL_KMS")
+    @Builder.Default
     private Long parkingKilometers = 0L;
 
     @Column(name = "BAL_FREE_KMS")
+    @Builder.Default
     private Long parkingFreeKilometers = 0L;
 
     @Column(name = "BAL_TKN_OVER_KMS")
+    @Builder.Default
     private Long parkingTakenOverKilometers = 0L;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "BAL_USR_ID")
     private User user;
+
+    public void addKilometers(Long tripKilometers, boolean updateParkingBalance) {
+        if(updateParkingBalance){
+            this.parkingKilometers += tripKilometers;
+        } else {
+            this.parkingFreeKilometers += tripKilometers;
+        }
+    }
 
 }

@@ -10,11 +10,13 @@ public class WSBalance {
 
     private String name;
     private Long kilometers;
+    private Long takenOverKilometers;
     private Long freeKilometers;
 
     public WSBalance(Balance balance) {
         name = balance.getUser().getName();
         kilometers = balance.getParkingKilometers();
+        takenOverKilometers = balance.getParkingTakenOverKilometers();
         freeKilometers = balance.getParkingFreeKilometers();
     }
 }

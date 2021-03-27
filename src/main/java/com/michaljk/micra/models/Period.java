@@ -1,5 +1,6 @@
 package com.michaljk.micra.models;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import java.util.List;
 
 
 @Data
+@Builder
 @Entity
 @Table(name = "PERIODS")
 public class Period {
@@ -27,6 +29,7 @@ public class Period {
     private boolean settled;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "period")
+    @Builder.Default
     private List<Balance> balances = new ArrayList<>();
 
     @Override

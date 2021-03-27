@@ -1,11 +1,13 @@
 package com.michaljk.micra.models.trip;
 
 import com.michaljk.micra.models.User;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
 
 @Data
+@Builder
 @Entity
 @Table(name = "TRIP_USERS")
 public class TripUser {
@@ -19,6 +21,7 @@ public class TripUser {
     private Long userId;
 
     @Column(name = "TUS_KMS")
+    @Builder.Default
     private Long kilometers = 0L;
 
     @ManyToOne(fetch = FetchType.LAZY)

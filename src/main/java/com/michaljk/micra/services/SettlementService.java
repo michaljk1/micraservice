@@ -12,9 +12,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static javax.transaction.Transactional.TxType.REQUIRES_NEW;
 
 @Service
 @AllArgsConstructor
@@ -25,6 +28,7 @@ public class SettlementService {
     private final Environment environment;
     private final BalanceService balanceService;
 
+    @Transactional(REQUIRES_NEW)
     public WSSettlementResponse createSettlement(Period period, boolean callSplitwise) throws Exception {
         List<SettlementUser> users = getUsersForSettlement(period);
         Long totalKilometers = users.stream()
@@ -46,9 +50,9 @@ public class SettlementService {
         List<User> users = userService.getAllUsers();
         List<SettlementUser> settlementUsers = new ArrayList<>();
         for (User user : users) {
-            Optional<Balance> balance = user.getBalances().
-                    stream().filter(b -> b.getPeriod().equals(period)).findFirst();
-            balance.ifPresent(value -> settlementUsers.add(getSettlementUser(user, value.getParkingKilometers())));
+            Optional<Balance> balance = user.getBalances().stream().filter(b -> b.getPeriod().equals(period)).findFirst();
+            balance.ifPresent(value -> settlementUsers.add(getSettlementUser(user,
+                    value.getParkingKilometers() + value.getParkingTakenOverKilometers())));
         }
         return settlementUsers;
     }
