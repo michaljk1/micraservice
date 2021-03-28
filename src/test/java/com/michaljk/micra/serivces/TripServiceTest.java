@@ -23,8 +23,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 public class TripServiceTest {
@@ -54,6 +53,57 @@ public class TripServiceTest {
         Balance testBalance = getBalanceByUserName(tripSummary.getBalances(), "michal");
         assertEquals(20, testBalance.getParkingKilometers());
         assertEquals(11, testBalance.getParkingFreeKilometers());
+        assertEquals(12, testBalance.getParkingTakenOverKilometers());
+    }
+
+    @Test
+    void singleUserParkingFreeTrip() {
+        TripUser firstTripUser = getTripUser("michal", 400L);
+        Balance firstBalance = getBalance(180L, 10L, 12L, firstTripUser.getUser());
+
+        when(balanceService.getUserBalance(firstTripUser.getUser(), PERIOD_STUB)).thenReturn(firstBalance);
+        TripSummary tripSummary = tripService.addTrip(Collections.singletonList(firstTripUser), true, false);
+
+        assertEquals(400, tripSummary.getTotalKilometers());
+        assertEquals(1, tripSummary.getBalances().size());
+        Balance testBalance = getBalanceByUserName(tripSummary.getBalances(), "michal");
+        assertEquals(580, testBalance.getParkingKilometers());
+        assertEquals(10, testBalance.getParkingFreeKilometers());
+        assertEquals(12, testBalance.getParkingTakenOverKilometers());
+    }
+
+    @Test
+    void singleUserUpdateBalanceTripWithTakeOver() {
+        TripUser firstTripUser = getTripUser("michal", 10L);
+        firstTripUser.setParkingUser(true);
+        Balance firstBalance = getBalance(10L, 11L, 12L, firstTripUser.getUser());
+
+        when(balanceService.getUserBalance(firstTripUser.getUser(), PERIOD_STUB)).thenReturn(firstBalance);
+        TripSummary tripSummary = tripService.addTrip(Collections.singletonList(firstTripUser), true, true);
+
+        assertEquals(10, tripSummary.getTotalKilometers());
+        assertEquals(1, tripSummary.getBalances().size());
+        Balance testBalance = getBalanceByUserName(tripSummary.getBalances(), "michal");
+        assertEquals(20, testBalance.getParkingKilometers());
+        assertEquals(11, testBalance.getParkingFreeKilometers());
+        assertEquals(12, testBalance.getParkingTakenOverKilometers());
+
+    }
+
+    @Test
+    void singleUserParkingFreeTripWithTakeOver() {
+        TripUser firstTripUser = getTripUser("michal", 400L);
+        firstTripUser.setParkingUser(true);
+        Balance firstBalance = getBalance(180L, 10L, 12L, firstTripUser.getUser());
+
+        when(balanceService.getUserBalance(firstTripUser.getUser(), PERIOD_STUB)).thenReturn(firstBalance);
+        TripSummary tripSummary = tripService.addTrip(Collections.singletonList(firstTripUser), true, true);
+
+        assertEquals(400, tripSummary.getTotalKilometers());
+        assertEquals(1, tripSummary.getBalances().size());
+        Balance testBalance = getBalanceByUserName(tripSummary.getBalances(), "michal");
+        assertEquals(580, testBalance.getParkingKilometers());
+        assertEquals(10, testBalance.getParkingFreeKilometers());
         assertEquals(12, testBalance.getParkingTakenOverKilometers());
     }
 
@@ -93,7 +143,61 @@ public class TripServiceTest {
         assertEquals(12, danielBalance.getParkingTakenOverKilometers());
     }
 
+    @Test
+    void multipleUserWithTakeOverUpdateBalanceTrip(){
+        TripUser firstTripUser = getTripUser("michal", 10L);
+        firstTripUser.setParkingUser(true);
+        Balance firstBalance = getBalance(100L, 100L, 100L, firstTripUser.getUser());
 
+        TripUser secondTripUser = getTripUser("zygmunt", 5L);
+        Balance secondBalance = getBalance(0L, 25L, 0L, secondTripUser.getUser());
+
+        when(balanceService.getUserBalance(firstTripUser.getUser(), PERIOD_STUB)).thenReturn(firstBalance);
+        when(balanceService.getUserBalance(secondTripUser.getUser(), PERIOD_STUB)).thenReturn(secondBalance);
+
+        TripSummary tripSummary = tripService.addTrip(List.of(firstTripUser, secondTripUser), true, true);
+
+        assertEquals(15, tripSummary.getTotalKilometers());
+        assertEquals(2, tripSummary.getBalances().size());
+
+        Balance michalBalance = getBalanceByUserName(tripSummary.getBalances(), "michal");
+        assertEquals(110, michalBalance.getParkingKilometers());
+        assertEquals(100, michalBalance.getParkingFreeKilometers());
+        assertEquals(105, michalBalance.getParkingTakenOverKilometers());
+
+        Balance zygmuntBalance = getBalanceByUserName(tripSummary.getBalances(), "zygmunt");
+        assertEquals(0, zygmuntBalance.getParkingKilometers());
+        assertEquals(30, zygmuntBalance.getParkingFreeKilometers());
+        assertEquals(0, zygmuntBalance.getParkingTakenOverKilometers());
+    }
+
+    //currently this logic should not occur
+    @Test
+    void multipleUserWithTakeOverParkingFreeTrip(){
+        TripUser firstTripUser = getTripUser("michal", 10L);
+        Balance firstBalance = getBalance(100L, 100L, 100L, firstTripUser.getUser());
+
+        TripUser secondTripUser = getTripUser("zygmunt", 5L);
+        Balance secondBalance = getBalance(0L, 25L, 0L, secondTripUser.getUser());
+
+        when(balanceService.getUserBalance(firstTripUser.getUser(), PERIOD_STUB)).thenReturn(firstBalance);
+        when(balanceService.getUserBalance(secondTripUser.getUser(), PERIOD_STUB)).thenReturn(secondBalance);
+
+        TripSummary tripSummary = tripService.addTrip(List.of(firstTripUser, secondTripUser), false, false);
+
+        assertEquals(15, tripSummary.getTotalKilometers());
+        assertEquals(2, tripSummary.getBalances().size());
+
+        Balance michalBalance = getBalanceByUserName(tripSummary.getBalances(), "michal");
+        assertEquals(100, michalBalance.getParkingKilometers());
+        assertEquals(110, michalBalance.getParkingFreeKilometers());
+        assertEquals(100, michalBalance.getParkingTakenOverKilometers());
+
+        Balance zygmuntBalance = getBalanceByUserName(tripSummary.getBalances(), "zygmunt");
+        assertEquals(0, zygmuntBalance.getParkingKilometers());
+        assertEquals(30, zygmuntBalance.getParkingFreeKilometers());
+        assertEquals(0, zygmuntBalance.getParkingTakenOverKilometers());
+    }
     private Balance getBalanceByUserName(List<Balance> balances, String name) {
         return balances.stream().filter(balance -> balance.getUser().getName().equals(name)).findFirst().orElseThrow();
     }
