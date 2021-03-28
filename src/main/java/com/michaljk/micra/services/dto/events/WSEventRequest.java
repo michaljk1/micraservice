@@ -1,5 +1,6 @@
 package com.michaljk.micra.services.dto.events;
 
+import com.michaljk.micra.models.Event;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,5 +15,17 @@ public class WSEventRequest {
     private Double price;
     private Date date;
     private Long odometer;
+    private String type;
+
+    public Event toEvent(){
+        return Event.builder()
+                .name(name)
+                .date(date == null ? new Date() : date)
+                .description(description)
+                .price(price)
+                .odometer(odometer)
+                .type(type)
+                .build();
+    }
 
 }

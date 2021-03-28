@@ -1,5 +1,6 @@
 package com.michaljk.micra.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,18 +15,24 @@ import java.util.Date;
 @Data
 @Entity
 @Builder
+@AllArgsConstructor
 @Table(name = "events")
 public class Event {
 
+    public Event() {
+
+    }
+
     public interface Type {
-        String REFUELING = "RF";
-        String FILTERS_REPLACEMENT = "FR";
-        String GAS_FILTER_CHANGE = "GF";
-        String REPAIR = "RP";
-        String PURCHASE = "PC";
-        String CAR_WASH = "CW";
-        String CAR_REVIEW = "CR";
-        String INSURANCE = "OC";
+        String FILTERS_REPLACEMENT = "FILTERS_REPLACEMENT";
+        String GAS_FILTER_CHANGE = "GAS_FILTER_CHANGE";
+        String CAR_REVIEW = "CAR_REVIEW";
+        String INSURANCE = "INSURANCE";
+        String REPAIR = "REPAIR";
+        String PURCHASE = "PURCHASE";
+        String CAR_WASH = "CAR_WASH";
+        String REFUELING = "REFUELING";
+
     }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

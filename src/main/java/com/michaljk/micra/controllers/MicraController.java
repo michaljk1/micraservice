@@ -81,7 +81,7 @@ public class MicraController {
 
     @PostMapping("event")
     public ResponseEntity<String> addEvent(@RequestBody WSEventRequest eventRequest){
-        carService.addEvent(eventRequest);
+        carService.saveEvent(eventRequest.toEvent());
         return new ResponseEntity<>("Event added", HttpStatus.OK);
     }
 
