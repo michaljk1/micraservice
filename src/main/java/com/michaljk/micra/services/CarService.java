@@ -50,11 +50,11 @@ public class CarService {
         eventRepository.save(event);
     }
 
-    public boolean insuranceAlarm(Date baseDate) {
-        Event lastInsuranceEvent = eventRepository.findTopByTypeOrderByDateDateDesc(Event.Type.INSURANCE).orElse(null);
-        if (lastInsuranceEvent != null) {
-            Date lastInsuranceDate = lastInsuranceEvent.getDate();
-            return baseDate.after(DateUtils.addMonthsToDate(lastInsuranceDate, AppConfig.INSURANCE_ALARM_MONTHS));
+    public boolean alarmBasedOnDate(Date baseDate, String eventType, int alarmMonths) {
+        Event lastEvent = eventRepository.findTopByTypeOrderByDateDateDesc(eventType).orElse(null);
+        if (lastEvent != null) {
+            Date lastInsuranceDate = lastEvent.getDate();
+            return baseDate.after(DateUtils.addMonthsToDate(lastInsuranceDate, alarmMonths));
         }
         return false;
     }

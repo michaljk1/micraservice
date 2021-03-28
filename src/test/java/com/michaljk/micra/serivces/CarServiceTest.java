@@ -1,5 +1,6 @@
 package com.michaljk.micra.serivces;
 
+import com.michaljk.micra.config.AppConfig;
 import com.michaljk.micra.models.Event;
 import com.michaljk.micra.repositories.CarRepository;
 import com.michaljk.micra.repositories.EventRepository;
@@ -34,7 +35,7 @@ public class CarServiceTest {
         Calendar calendar = Calendar.getInstance();
         calendar.set(2020, Calendar.MARCH, 10);
         when(eventRepository.findTopByTypeOrderByDateDateDesc(eq(Event.Type.INSURANCE))).thenReturn(Optional.empty());
-        assertFalse(carService.insuranceAlarm(date));
+        assertFalse(carService.alarmBasedOnDate(date, Event.Type.INSURANCE, AppConfig.INSURANCE_ALARM_MONTHS));
     }
 
     @Test
@@ -43,7 +44,7 @@ public class CarServiceTest {
         Calendar calendar = Calendar.getInstance();
         calendar.set(2020, Calendar.MARCH, 10);
         when(eventRepository.findTopByTypeOrderByDateDateDesc(eq(Event.Type.INSURANCE))).thenReturn(Optional.of(getEvent(calendar.getTime())));
-        assertTrue(carService.insuranceAlarm(date));
+        assertTrue(carService.alarmBasedOnDate(date, Event.Type.INSURANCE, AppConfig.INSURANCE_ALARM_MONTHS));
     }
 
 
@@ -53,7 +54,7 @@ public class CarServiceTest {
         Calendar calendar = Calendar.getInstance();
         calendar.set(2020, Calendar.MARCH, 10);
         when(eventRepository.findTopByTypeOrderByDateDateDesc(eq(Event.Type.INSURANCE))).thenReturn(Optional.of(getEvent(calendar.getTime())));
-        assertFalse(carService.insuranceAlarm(date));
+        assertFalse(carService.alarmBasedOnDate(date, Event.Type.INSURANCE, AppConfig.INSURANCE_ALARM_MONTHS));
     }
 
 
