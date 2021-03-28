@@ -58,4 +58,13 @@ public class CarService {
         }
         return false;
     }
+
+    public boolean alarmBasedOnKilometers(Long actualOdometer, String eventType, int alarmKilometers) {
+        Event lastEvent = eventRepository.findTopByTypeOrderByDateDateDesc(eventType).orElse(null);
+        if (lastEvent != null) {
+            Long lastEventOdometer = lastEvent.getOdometer();
+            return lastEventOdometer + alarmKilometers > actualOdometer;
+        }
+        return false;
+    }
 }
