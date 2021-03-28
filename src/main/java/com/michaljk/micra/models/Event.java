@@ -1,5 +1,6 @@
 package com.michaljk.micra.models;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -12,9 +13,20 @@ import java.util.Date;
 
 @Data
 @Entity
+@Builder
 @Table(name = "events")
 public class Event {
 
+    public interface Type {
+        String REFUELING = "RF";
+        String FILTERS_REPLACEMENT = "FR";
+        String GAS_FILTER_CHANGE = "GF";
+        String REPAIR = "RP";
+        String PURCHASE = "PC";
+        String CAR_WASH = "CW";
+        String CAR_REVIEW = "CR";
+        String INSURANCE = "OC";
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "evt_id")
@@ -22,6 +34,9 @@ public class Event {
 
     @Column(name = "evt_name")
     private String name;
+
+    @Column(name = "evt_type")
+    private String type;
 
     @Column(name = "evt_desc")
     private String description;
