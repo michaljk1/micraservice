@@ -52,7 +52,7 @@ public class CarService {
         eventRepository.save(event);
     }
 
-    @Scheduled(cron = "0 0 0 ? * MON *")
+    @Scheduled(cron = "0 0 0 ? * MON")
     public void carAlarm() {
         Long actualOdometer = getCar().getOdometer();
         Date currentDate = new Date();

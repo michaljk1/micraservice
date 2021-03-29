@@ -1,7 +1,9 @@
 package com.michaljk.micra.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -19,6 +21,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "BALANCES")
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Balance {
 
     @Id

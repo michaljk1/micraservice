@@ -50,6 +50,16 @@ public class MicraController {
         return settlementService.createSettlement(settlementPeriod, settlementRequest.isCallSplitwise());
     }
 
+    @GetMapping("test")
+    public WSPeriodResponse getTest() {
+        return new WSPeriodResponse(balanceService.getPeriod("March", 2021));
+    }
+
+    @GetMapping("test2")
+    public WSPeriodResponse getTest(@RequestParam String month) {
+        return new WSPeriodResponse(balanceService.getPeriod(month, 2021));
+    }
+
     @GetMapping("period")
     public WSPeriodResponse getPeriod(
             @RequestParam Integer year,

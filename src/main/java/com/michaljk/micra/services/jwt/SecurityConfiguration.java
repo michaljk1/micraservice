@@ -26,6 +26,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/**/signUp",
             "/**/resetPassword",
             "/**/password",
+            "/**/test",
+            "/**/test2",
             "/configuration/ui",
             "/swagger-resources/**",
             "/configuration/security",
